@@ -1,0 +1,30 @@
+::ng-deep .last_searched_product{
+    background-color: rgb(199,200,202);
+    color: white;
+}
+::ng-deep .cdk-overlay-pane {
+    position: fixed !important;
+  }
+  
+  
+/* ::ng-deep mat-mdc-autocomplete-panel{
+    background-color: rbga(255,255,255,1);
+    color: black;
+    z-index: 1000;
+} */
+
+::ng-deep .cdk-overlay-pane .mat-mdc-autocomplete-panel
+{
+
+    background-color: white;
+    color: black;
+
+}
+
+.title_in_table{
+    max-width: 260px;
+    font-size: 13px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

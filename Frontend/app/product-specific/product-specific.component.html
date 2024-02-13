@@ -1,0 +1,446 @@
+<ng-container *ngIf="init">
+
+    <div class="mt-4 mb-0 d-flex justify-content-center align-items-center">
+        <p class="mb-0">{{product_dict["Title"]}}</p>
+    </div>
+  <div class="d-flex mt-2 justify-content-between">
+    <div class="d-inline-flex">
+      <button type="button" class="btn btn-light" (click)="backButtonClicked()">
+        <span class="align-middle material-symbols-outlined"> arrow_back_ios </span> List
+      </button>
+    </div>
+    <div class="d-inline-flex">
+      
+        <button
+          type="button"
+          class="btn btn-light p-0"  
+        >
+        <a [href]="getFacebookLink()" target="_blank">
+            <img src="./assets/facebook.png" style="width:45px;height:42px">
+        </a>
+        </button>
+      <ng-container *ngIf="checkProductInCart(product_dict['ItemID']); else else_block">
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="deleteProductFromCart(product_dict['ItemID'])"
+        >
+          <span class="material-symbols-outlined" style="color:goldenrod"> remove_shopping_cart </span>
+        </button>
+      </ng-container>
+      <ng-template #else_block>
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="
+            addProductInCart(
+              product_dict['ItemID'],
+              clicked_product_image,
+              clicked_product_title,
+              product_dict['Price'],
+              clicked_product_shipping
+            )
+          "
+        >
+          <span class="material-symbols-outlined" style="color:black"> add_shopping_cart </span>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+  <div class="d-flex mt-2 flex-column align-items-end">
+    <div class="mb-0 text-end">
+      <button
+        type="button"
+        [ngClass]="product_tab == 'product' ? 'btn btn-dark' : 'btn btn-white'"
+        style="border-radius: 0px"
+        (click)="changeTab('product')"
+        
+      >
+        Product
+      </button>
+      <button
+        type="button"
+        [ngClass]="product_tab == 'photos' ? 'btn btn-dark' : 'btn btn-white'"
+        style="border-radius: 0px"
+        (click)="changeTab('photos')"
+      >
+        Photos
+      </button>
+      <button
+        type="button"
+        [ngClass]="product_tab == 'shipping' ? 'btn btn-dark' : 'btn btn-white'"
+        style="border-radius: 0px"
+        (click)="changeTab('shipping')"
+        id="btn_shipping"
+      >
+        Shipping
+      </button>
+      <button
+        type="button"
+        [ngClass]="product_tab == 'seller' ? 'btn btn-dark' : 'btn btn-white'"
+        style="border-radius: 0px"
+        (click)="changeTab('seller')"
+      >
+        Seller
+      </button>
+      <button
+        type="button"
+        [ngClass]="
+          product_tab == 'similar_products' ? 'btn btn-dark' : 'btn btn-white'
+        "
+        style="border-radius: 0px"
+        (click)="changeTab('similar_products')"
+      >
+        Similar Products
+      </button>
+    </div>
+    <div class="mt-0" style="width: 100%;"><hr style="margin-top:0px;margin-bottom:8px ;border-top:1px solid grey" /></div>
+
+  </div>
+
+
+  <ng-container *ngIf="product_tab == 'product'">
+    <table class="table table-striped table-dark table-hover" style="font-size: 13px">
+
+      <tbody>
+        <tr class="row">
+            <td class="col-12 col-md-4" style="font-weight: bold">Product Images</td>
+          <td class="col-12 col-md-8"><a (click)="openCarouselDialog();"style="text-decoration:none;color:grey" href="#"
+            >View Product Images here</a
+          >
+            
+          </td>
+        
+        </tr>
+
+        <tr class="row">
+          <td class="col-12 col-md-4" style="font-weight: bold">Price</td>
+          <td class="col-12 col-md-8">{{"$"+ product_dict["Price"] }}</td>
+        </tr>
+        <tr class="row">
+          <td class="col-12 col-md-4" style="font-weight: bold">Location</td>
+          <td class="col-12 col-md-8">{{ product_dict["Location"] }}</td>
+        </tr>
+
+        <tr class="row">
+          <td class="col-12 col-md-4" style="font-weight: bold">Return Policy</td>
+          <td  class="col-12 col-md-8">{{ product_dict["Return Policy (US)"] }}</td>
+        </tr>
+        <tr class="row" *ngFor="let _ of product_dict['Item Specifics']; let i = index">
+          <td class="col-12 col-md-4" style="font-weight: bold">
+            {{ product_dict["Item Specifics"][i]["Name"] }}
+          </td>
+          <td class="col-12 col-md-8">{{ product_dict["Item Specifics"][i]["Value"] }}</td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </ng-container>
+
+  <ng-container *ngIf="product_tab == 'photos'">
+
+
+    <div class="container p-0">
+      <div class="row m-0 p-0">
+        <div class="col-12 col-sm-4 m-0 p-0">
+          <div class="row m-0 p-0">
+            <div class="col-12 m-0 p-0">
+              <div class="image-container">
+                <img
+                  [src]="product_images[0]"
+                  alt="Image"
+                  class="img-fluid"
+                  style="max-height: 50%"
+                />
+              </div>
+            </div>
+            <div class="col-12 m-0 p-0">
+              <div class="image-container">
+                <img
+                  [src]="product_images[1]"
+                  alt="Image"
+                  class="img-fluid"
+                  style="max-height: 50%"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-4 m-0 p-0">
+          <div class="row m-0 p-0">
+            <div
+              class="col-12 m-0 p-0"
+              *ngFor="let image of product_images.slice(2, 5)"
+            >
+              <div class="image-container">
+                <img
+                  [src]="image"
+                  alt="Image"
+                  class="img-fluid"
+                  style="max-height: 33%"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-4 m-0 p-0">
+          <div class="row m-0 p-0">
+            <div
+              class="col-12 m-0 p-0"
+              *ngFor="let image of product_images.slice(5, 8)"
+            >
+              <div class="image-container">
+                <img
+                  [src]="image"
+                  alt="Image"
+                  class="img-fluid"
+                  style="max-height: 33%"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="product_tab == 'shipping'">
+    <table class="table table-striped table-dark table-hover" style="font-size: 13px">
+
+      <tbody>
+        <tr class="row">
+          <td class="col-12 col-md-4" style="font-weight: bold">Shipping Cost</td>
+          <td class="col-12 col-md-8" style="padding-left: 14px;">{{ product_dict["Shipping Cost"] }}</td>
+        </tr>
+        <tr class="row">
+          <td class="col-12 col-md-4" style="font-weight: bold">Shipping Locations</td>
+          <td class="col-12 col-md-8" style="padding-left: 14px;">{{ product_dict["Shipping Locations"] }}</td>
+        </tr>
+        <tr class="row">
+          <td class="col-12 col-md-4" style="font-weight: bold">Handling time</td>
+          <td class="col-12 col-md-8" style="padding-left: 14px;">{{ product_dict["Handling time"] }}</td>
+        </tr>
+
+        <tr class="row">
+          <td class="col-12 col-md-4" style="font-weight: bold">Expedited Shipping</td>
+          <td
+          class="col-12 col-md-8"
+            *ngIf="
+              product_dict['Expedited Shipping'] == 'true';
+              else expedited_else_block
+            "
+          >
+            <span class="material-symbols-outlined class_green" style="color: green"> done </span>
+          </td>
+          <ng-template #expedited_else_block
+            ><td class="col-12 col-md-8">
+              <span class="material-symbols-outlined class_red" style="color: red"> close </span>
+            </td></ng-template
+          >
+        </tr>
+
+        <tr class="row">
+          <td class="col-12 col-md-4" style="font-weight: bold">One Day Shipping</td>
+          <td class="col-12 col-md-8"
+            *ngIf="
+              product_dict['OneDayShipping'] == 'true';
+              else one_day_else_block
+            "
+          >
+            <span class="material-symbols-outlined class_green" style="color: green"> done </span>
+          </td>
+          <ng-template #one_day_else_block
+            ><td class="col-12 col-md-8">
+              <span class="material-symbols-outlined class_red" style="color: red"> close </span>
+            </td></ng-template
+          >
+        </tr>
+
+        <tr class="row">
+          <td class="col-12 col-md-4" style="font-weight: bold">Return Accepted</td>
+          <td class="col-12 col-md-8"
+            *ngIf="
+              product_dict['Return Accepted'] == 'true';
+              else ret_acc_else_block
+            "
+          >
+            <span class="material-symbols-outlined class_green" style="color: green"> done </span>
+          </td>
+          <ng-template #ret_acc_else_block
+            ><td class="col-12 col-md-8">
+              <span class="material-symbols-outlined class_red" style="color: red"> close </span>
+            </td></ng-template
+          >
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <ng-container *ngIf="product_tab == 'seller'">
+    <table class="table table-striped table-dark table-hover" style="font-size: 13px">
+        <!-- <colgroup>
+            <col style="width: 50%">
+            <col style="width: 50%">
+        </colgroup> -->
+      <tbody>
+        <tr class="row">
+          <td class="col-12" class="mx-auto" style="text-align: center;font-weight: bold;font-size: 17px;" colspan="2">
+            {{ product_dict["store_display_name"] }}
+          </td>
+        </tr>
+        <tr class="row">
+          <td class="col-12 col-md-6" style="font-weight: bold">Feedback Score</td>
+          <td class="col-12 col-md-6">{{ product_dict["Feedback Score"] }}</td>
+        </tr>
+
+        <tr class="row">
+          <td class="col-12 col-md-6" style="font-weight: bold">Popularity</td>
+          <td class="col-12 col-md-6" style="position:relative"><round-progress [current]="product_dict['Popularity']" [max]="100" [radius]="20" [stroke]="3"  [color]="'rgb(5,129,5)'" style="height: 40px;width:40px;" class="z-1 position-relative" ></round-progress>
+            <div class="z-2 position-absolute" style=" position: absolute; top: 18px; left: 16px;">{{product_dict['Popularity']}}</div>
+        </td>
+        </tr>
+
+        <tr class="row" *ngIf="product_dict['Feedback Rating Star'] !== 'None'">
+          <td class="col-12 col-md-6" style="font-weight: bold">Feedback Rating Star</td>
+          <td class="col-12 col-md-6" ><span class="material-icons" [style.color]="getStarColor(product_dict['Feedback Rating Star'])">
+            stars
+            </span></td>
+        </tr>
+
+        <tr class="row" *ngIf="product_dict['Top Rated']!==''">
+          <td class="col-12 col-md-6" style="font-weight: bold">Top Rated</td>
+          <!-- <td>{{ product_dict["Top Rated"] }}</td> -->
+          <td class="col-12 col-md-6"
+            *ngIf="
+              product_dict['Top Rated'] == 'true';
+              else top_rated_else_block
+            "
+          >
+            <span class="material-symbols-outlined class_green" style="color: green"> done </span>
+          </td>
+          <ng-template #top_rated_else_block
+            ><td class="col-12 col-md-6">
+              <span class="material-symbols-outlined class_red" style="color: red"> close </span>
+            </td></ng-template
+          >
+        </tr>
+
+        <tr class="row" *ngIf="product_dict['store_details_available'] == 'true'">
+          <td class="col-12 col-md-6" style="font-weight: bold">Store Name</td>
+          <td class="col-12 col-md-6">{{ product_dict["Store Name"] }}</td>
+        </tr>
+        <tr class="row" *ngIf="product_dict['store_details_available'] == 'true'">
+          <td  class="col-12 col-md-6" style="font-weight: bold">Product At</td>
+          <td class="col-12 col-md-6">
+            <a [href]="product_dict['store_link']" target="_blank">Store</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <ng-container
+    *ngIf="product_tab == 'similar_products'"
+  >
+    <div class="container m-0 p-0">
+      <div class="row m-0 pl-0">
+        <div class="col-12 col-md-3 p-0 px-0 px-md-3 mt-1 mt-md-0">
+          <div class="dropdown">
+            <select class="form-select" (change)="sort_by($event)">
+              <option value="default" selected>Default</option>
+              <option value="product_name">Product Name</option>
+              <option value="days_left">Days Left</option>
+              <option value="price">Price</option>
+              <option value="shipping_cost">Shipping Cost</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-12 col-md-3 p-0 px-md-2 mt-1 mt-md-0">
+          <select
+            class="form-select"
+            [disabled]="sort_by_var == 'default'"
+            (change)="get_sort_by_order($event)"
+          >
+            <option value="asc" selected>Ascending</option>
+            <option value="dsc">Descending</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row " *ngIf="!similar_product_status">
+        <div class="col mt-2">
+            <button
+                type="button"
+                class="btn btn-block"
+                style="
+                background-color: rgb(255, 243, 205);
+                color: rgb(142, 109, 21);
+                width: 100%;
+                text-align: left;
+                "
+                disabled
+            >
+                No Records.
+            </button>
+        </div>
+    </div>
+    <div *ngIf="similar_product_status">
+        <div class="row  bg-dark text-white m-0 mt-1 mb-1" style="height: fit-content;" *ngFor="let item of collection_1">
+            <div
+            class="col-12 col-md-4 col-lg-2  px-3 py-2 justify-content-center align-items-center"
+            >
+            <img
+                [src]="similar_products_dict[item]['image']"
+                style="width: 140px; height: 140px"
+            />
+            </div>
+            <div
+            class="col-12 col-md-8 col-lg-10 pt-2 ml-1 justify-content-left align-items-left"
+            >
+            <p class="mb-0" style="color: rgb(83,136,131);"><a [href]="similar_products_dict[item]['item_url']" target="_blank" style="text-decoration: none;">{{ similar_products_dict[item]["Product Name"] }}</a></p>
+            <p class="mb-0" style="color: rgb(100,165,88);">Price: {{ similar_products_dict[item]["Price"] }}</p>
+            <p class="mb-0" style="color: rgb(193,155,66);">
+                Shipping Cost: {{ similar_products_dict[item]["Shipping Cost"] }}
+            </p>
+            <p class="mb-0 pb-1" style="color: rgb(235,204,160);">Days Left: {{ similar_products_dict[item]["Days Left"] }}</p>
+            </div>
+        </div>
+        <ng-container *ngIf="show_more">
+            <div
+            class="row bg-dark text-white m-0 mt-1 mb-1"
+            *ngFor="let item of collection_2"
+            style="height: fit-content;"
+            >
+            <div
+                class="col-12 col-md-4 col-lg-2  px-3 py-2 justify-content-center align-items-center"
+            >
+                <img
+                [src]="similar_products_dict[item]['image']"
+                style="width: 140px; height: 140px"
+                />
+            </div>
+            <div
+                class="col-12 col-md-8 col-lg-10 pt-2 ml-1 justify-content-left align-items-left"
+            >
+                <p class="mb-0" style="color: rgb(83,136,131);"><a [href]="similar_products_dict[item]['item_url']" target="_blank" style="text-decoration: none;">{{ similar_products_dict[item]["Product Name"] }}</a></p>
+                <p class="mb-0" style="color: rgb(100,165,88);">Price: {{ similar_products_dict[item]["Price"] }}</p>
+                <p class="mb-0" style="color: rgb(193,155,66);">
+                Shipping Cost: {{ similar_products_dict[item]["Shipping Cost"] }}
+                </p>
+                <p class="mb-0 pb-1" style="color: rgb(235,204,160);">Days Left: {{ similar_products_dict[item]["Days Left"] }}</p>
+            </div>
+            </div>
+        </ng-container>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <button
+            type="button"
+            class="btn btn-dark"
+            (click)="show_more_less_clicked()"
+            >
+            {{ show_more ? "Show Less" : "Show More" }}
+            </button>
+        </div>
+        </div>
+    </div>
+  </ng-container>
+</ng-container>

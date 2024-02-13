@@ -1,0 +1,70 @@
+<ng-container *ngIf="init_status">
+    <table class="table table-striped table-dark table-hover">
+        <colgroup>
+            <col style="width: 5%">
+            <col style="width: 15%">
+            <col style="width: 45%">
+            <col style="width: 8%">
+            <col style="width: 10%">
+            <col style="width: 7%">
+            <col style="width: 10%">
+          </colgroup>
+
+        <thead>
+            <tr style="font-size: smaller;">
+                <th scope="col">#</th>
+                <th scope="col">Image</th>
+                <th scope="col">Title</th>
+                <th scope="col">Price</th>
+                <th scope="col">Shipping</th>
+                <th scope="col">Zip</th>
+                <th scope="col">Wish List</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of collection | paginate: { itemsPerPage: 10, currentPage: p }" [attr.id]="first_api_response_dict[item]['ItemID']" style="font-size: 12px;" [class.table-secondary]="first_api_response_dict[item]['ItemID']===last_product_item_id" >
+            
+                
+                <td scope="col">{{first_api_response_dict[item]['Sr No']}}</td>
+                
+                <td scope="col">
+                    <div class="container p-0">
+                        <a href="{{first_api_response_dict[item]['Image']}}" target="_blank" >
+                        <img [src]="first_api_response_dict[item]['Image']" alt="./assets/ebay_default.jpg" style="width: 90px;height:90px"></a>
+                    </div>
+                </td>
+                
+                <td scope="col" (click)="productOnClick(first_api_response_dict[item]['ItemID'], item, first_api_response_dict[item]['Image'],first_api_response_dict[item]['Title'],first_api_response_dict[item]['Shipping'])" style="color:blue; cursor:default !important;">
+                    <span  ngbTooltip="{{first_api_response_dict[item]['Title']}}" placement="bottom" tooltipClass="custom-tooltip">
+                    <p class="title_in_table">{{first_api_response_dict[item]['Title']}}</p></span></td>
+
+                <td scope="col" >{{first_api_response_dict[item]['Price']}}</td>
+                <td scope="col">{{first_api_response_dict[item]['Shipping Cost']}}</td>
+                <td scope="col">{{first_api_response_dict[item]['Zip']}}</td>
+                <td scope="col">
+                    <ng-container *ngIf="checkProductInCart(first_api_response_dict[item]['ItemID']) ;else else_block">
+                        <button type="button" class="btn btn-light" (click)="deleteProductFromCart(first_api_response_dict[item]['ItemID'])" style="width: 45px; height: 35px;">
+                            <span class="align-center material-symbols-outlined" style="color:goldenrod">
+                                remove_shopping_cart
+                            </span>
+                        </button>
+                    </ng-container>
+                    <ng-template  #else_block>
+                        <!-- <button type="button" class="btn btn-light" (click)="addProductInCart(first_api_response_dict[item]['ItemID'], first_api_response_dict[item]['Image'],first_api_response_dict[item]['Title'],first_api_response_dict[item]['Price'],first_api_response_dict[item]['Shipping'])" style="width: 45px; height: 35px;"> -->
+                        <button type="button" class="btn btn-light" (click)="addProductInCart(item, first_api_response_dict[item])" style="width: 45px; height: 35px;">
+                            <span class="align-center material-symbols-outlined" >
+                                add_shopping_cart
+                            </span>
+                        </button>
+                    </ng-template>
+                    
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+    <div class="container d-flex flex-column align-items-center">
+        <pagination-controls (pageChange)="p = $event" [maxSize]="5"></pagination-controls>
+    </div>
+
+</ng-container>

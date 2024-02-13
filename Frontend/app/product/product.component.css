@@ -1,0 +1,29 @@
+::ng-deep .highlighted-row{
+    background-color: rgb(199,200,202);
+    color: white;
+}
+
+/* tr td{
+    align-items: center;
+} */
+
+.title_in_table{
+    max-width: 260px;
+    font-size: 13px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.title_in_table:hover{
+    text-decoration: underline;
+}
+
+::ng-deep .custom-tooltip .tooltip-inner{
+    /* position: absolute; */
+    background-color: rgb(70,71,72);
+    color: rgb(190,191,192);
+    font-size:12px;
+    /* z-index: 1000; */
+    /* border: 2px solid black; */
+}

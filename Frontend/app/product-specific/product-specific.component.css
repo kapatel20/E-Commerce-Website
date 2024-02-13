@@ -1,0 +1,42 @@
+.image-carousel-modal{
+    width:420px;
+    height:500px;
+}
+
+::ng-deep .modal-dialog{
+    width: 420px;
+    height: 500px;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+background-color: black; /* Set the background color of the arrows */
+}
+
+.carousel-control-prev, .carousel-control-next {
+width: 5%; /* Adjust the width of the arrows as needed */
+}
+ 
+.material-symbols-outlined
+{
+    color:green;    
+}
+
+.class-red
+{
+    color:red;    
+}
+.image-container{
+    border: 7px solid black;
+    margin:4px;
+}
+
+.nav_btn{
+    color: black;text-decoration: none;
+    background-color: white;
+
+}
+
+.nav_btn:hover{
+    /* color: black; */
+    border:1px solid grey;
+}
